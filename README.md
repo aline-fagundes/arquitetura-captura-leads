@@ -33,7 +33,7 @@ Os leads são armazenados em um **banco NoSQL com criptografia, escalabilidade h
 
 ### Diagrama de arquitetura
 
-<DIAGRAMA>
+![Diagrama de Arquitetura](imagens/captura-leads-flowchart.png)
 
 ---
 
