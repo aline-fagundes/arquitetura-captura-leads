@@ -109,7 +109,7 @@ Versão que oferece suporte oficial estendido, garantindo estabilidade a longo p
 
 ##### Spring Boot 3 · Spring WebFlux
 
-Framework moderno e consolidado para construção de APIs. O Spring WebFlux adota um modelo em que as operações de I/O são assíncronas (não esperam pela resposta antes de seguir o fluxo) e não-bloqueantes (não ocupam threads enquanto aguardam), permitindo que poucos threads atendam centenas de conexões simultaneamente. Isso reduz o consumo de recursos, sendo ideal para casos com picos abruptos de acesso.
+Framework moderno e consolidado para construção de APIs. O Spring WebFlux adota um modelo em que as operações de I/O são assíncronas (não esperam pela resposta antes de seguir o fluxo) e não-bloqueantes (não ocupam threads enquanto aguardam), permitindo que poucas threads atendam centenas de conexões simultaneamente. Isso reduz o consumo de recursos, sendo ideal para casos com picos abruptos de acesso.
 
 ##### Spring Security Resource Server · JWT
 
