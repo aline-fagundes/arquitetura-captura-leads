@@ -39,19 +39,19 @@ Os leads são armazenados em um **banco NoSQL com criptografia, escalabilidade h
 
 ### Fluxo de dados - do QR Code até o banco de dados
 
-| #    | O que acontece | Validações executadas | Tecnologias que atuam |
+| #    | Etapas do Fluxo | Validações executadas | Tecnologias que atuam |
 |------|----------------|-----------------------|-----------------------|
-| *0*  | Leitura do QR Code <br> • A câmera do celular interpreta o QR e abre a URL de pré-cadastro | - | - |
-| *1*  | Entrega do site <br> • O navegador requisita os static assets, que são servidos a partir do PoP de maior proximidade. | - | Azure CDN · Azure Storage Static Website |
-| *2*  | Renderização do form | • Validação dos campos com React <br> • Geração de token reCAPTCHA | React · reCAPTCHA |
-| *3*  | Envio do cadastro <br> | • Token reCAPTCHA no header | - |
-| *4*  | Proteção de borda | • WAF aplica regras OWASP Top 10 <br> • Azure DDoS Protection reduz tráfego mal-intencionado | Azure Front Door · WAF · DDoS Standard |
-| *5*  | API Gateway recebe request | • Verifica token reCAPTCHA via API <br> • JSON Schema valida tipos/tamanho <br> • Limita requisições através de rate-limit e quota <br> • Emite *JWT interno* | Azure API Management |
-| *6*  | Microsserviço `lead-intake` processa request | • Spring Security valida JWT <br> • Bean Validation nos DTOs <br> • Gera `cpfHash = SHA-256(cpf)` (deduplicação) <br> • Criptografia de CPF e telefone | Java · Spring Boot · Spring WebFlux · Spring Security |
-| *7*  | Mensagem é publicada na fila para processamento assíncrono | • Até 3 novas tentativas se falhar <br> | Azure Service Bus |
-| *8*  | Resposta ao cliente | - | HTTP 202 Accepted (“Cadastro recebido!”) |
-| *9*  | Worker `lead-persister` consome a fila | • Se `cpfHash` já existir, ignora a mensagem <br> • Após gravar o lead com sucesso, envia email ou SMS de confirmação ao cliente | Java · Spring Boot · Service Bus SDK |
-| *10* | Gravação no banco de dados | • Autoscale ajusta throughput automaticamente <br> • `Policy “Unique Key(cpfHash)”` impede duplicatas no banco de dados | Azure Cosmos DB |
+| *0*  | **Leitura do QR Code** <br> A câmera do celular interpreta o QR e abre a URL de pré-cadastro | - | - |
+| *1*  | **Entrega do site** <br> O navegador requisita os static assets, que são servidos a partir do PoP de maior proximidade | - | Azure CDN · Azure Storage Static Website |
+| *2*  | **Renderização do form** | • Validação dos campos com React <br> • Geração de token reCAPTCHA | React · reCAPTCHA |
+| *3*  | **Envio do cadastro** <br> Body JSON com nome, CPF, telefone, e-mail | • Token reCAPTCHA no header | - |
+| *4*  | **Proteção de borda** | • WAF aplica regras OWASP Top 10 <br> • Azure DDoS Protection reduz tráfego mal-intencionado | Azure Front Door · WAF · DDoS Standard |
+| *5*  | **API Gateway recebe request** | • Verifica token reCAPTCHA via API <br> • JSON Schema valida tipos/tamanho <br> • Limita requisições através de rate-limit e quota <br> • Emite *JWT interno* | Azure API Management |
+| *6*  | **Microsserviço `lead-intake` processa request** | • Spring Security valida JWT <br> • Bean Validation nos DTOs <br> • Gera `cpfHash = SHA-256(cpf)` (deduplicação) <br> • Criptografia de CPF e telefone | Java · Spring Boot · Spring WebFlux · Spring Security |
+| *7*  | **Mensagem é publicada na fila para processamento assíncrono** | • Até 3 novas tentativas se falhar <br> | Azure Service Bus |
+| *8*  | **Resposta ao cliente** | - | HTTP 202 Accepted (“Cadastro recebido!”) |
+| *9*  | **Worker `lead-persister` consome a fila** | • Se `cpfHash` já existir, ignora a mensagem <br> • Após gravar o lead com sucesso, envia email ou SMS de confirmação ao cliente | Java · Spring Boot · Service Bus SDK |
+| *10* | **Gravação no banco de dados** | • Autoscale ajusta throughput automaticamente <br> • `Policy “Unique Key(cpfHash)”` impede duplicatas no banco de dados | Azure Cosmos DB |
 
 ---
 
